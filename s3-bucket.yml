@@ -29,6 +29,25 @@ Metadata:
         x: 282.1666666666667
         'y': 278.2916666666667
       z: 0
+      embeds: []
+    168ab31b-1e69-4d42-bb77-6e2dc9371b7c:
+      size:
+        width: 80
+        height: 80
+      position:
+        x: 160
+        'y': 260
+      z: 0
+      embeds: []
+    f2194dc4-322b-48bd-9811-892e84c434ca:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 90
+        'y': 240
+      z: 0
+      embeds: []
 Resources:
   S3Bucket:
     Type: 'AWS::S3::Bucket'
@@ -60,8 +79,8 @@ Resources:
         id: 2280bcf3-ad14-4c6e-8c63-ddb05cc8f533
   CloudFrontDistribution:
     Type: 'AWS::CloudFront::Distribution'
-    Properties: 
-      DistributionConfig: 
+    Properties:
+      DistributionConfig:
         Origins:
           - Id: myS3Bucket
             DomainName: hack3rlife.website.s3-website.us-east-2.amazonaws.com
@@ -83,3 +102,25 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 073c4e89-8950-4545-9b34-39c4db361145
+  R53Configuration:
+    Type: 'AWS::Route53::HostedZone'
+    Properties:
+      Name: hack3rlife.website
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 168ab31b-1e69-4d42-bb77-6e2dc9371b7c
+  R53RSConfiguration:
+    Type: 'AWS::Route53::RecordSetGroup'
+    Properties:
+      HostedZoneId: !Ref R53Configuration
+      RecordSets:
+        - Name: hack3rlife.com
+          Type: A
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2
+            DNSName: !GetAtt 
+              - CloudFrontDistribution
+              - DomainName
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: f2194dc4-322b-48bd-9811-892e84c434ca
