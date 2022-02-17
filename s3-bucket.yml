@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: 2010-09-09
+Metadata:
+  'AWS::CloudFormation::Designer':
+    8d708b1e-9182-4534-9e57-c045eb939215:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 357
+        'y': 223
+      z: 0
+      embeds: []
+    2280bcf3-ad14-4c6e-8c63-ddb05cc8f533:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 444
+        'y': 243.75
+      z: 0
+Resources:
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: hack3rlife.website
+      WebsiteConfiguration:
+        IndexDocument: index.html
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 8d708b1e-9182-4534-9e57-c045eb939215
+  BucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument: 
+        Version: 2012-10-17
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: "*"
+            Action: s3:GetObject
+            Resource: !Join
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref S3Bucket
+                - /*
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 2280bcf3-ad14-4c6e-8c63-ddb05cc8f533
+
