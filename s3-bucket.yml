@@ -6,8 +6,8 @@ Metadata:
         width: 60
         height: 60
       position:
-        x: 357
-        'y': 223
+        x: 380
+        'y': 260
       z: 0
       embeds: []
     2280bcf3-ad14-4c6e-8c63-ddb05cc8f533:
@@ -15,8 +15,8 @@ Metadata:
         width: 60
         height: 60
       position:
-        x: 444
-        'y': 243.75
+        x: 510
+        'y': 220
       z: 0
       embeds: []
       isassociatedwith:
@@ -33,10 +33,10 @@ Metadata:
     168ab31b-1e69-4d42-bb77-6e2dc9371b7c:
       size:
         width: 80
-        height: 80
+        height: 100
       position:
-        x: 160
-        'y': 260
+        x: 140
+        'y': 240
       z: 0
       embeds: []
     f2194dc4-322b-48bd-9811-892e84c434ca:
@@ -44,15 +44,16 @@ Metadata:
         width: 60
         height: 60
       position:
-        x: 90
-        'y': 240
+        x: 20
+        'y': 180
       z: 0
       embeds: []
 Resources:
   S3Bucket:
     Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Delete
     Properties:
-      BucketName: hack3rlife.website
+      BucketName: hectorea.shop
       WebsiteConfiguration:
         IndexDocument: index.html
     Metadata:
@@ -83,7 +84,7 @@ Resources:
       DistributionConfig:
         Origins:
           - Id: myS3Bucket
-            DomainName: hack3rlife.website.s3-website.us-east-2.amazonaws.com
+            DomainName: hectorea.shop.s3-website.us-east-1.amazonaws.com
             CustomOriginConfig:
               HTTPPort: '80'
               HTTPSPort: '443'
@@ -98,29 +99,31 @@ Resources:
           ViewerProtocolPolicy: redirect-to-https
         PriceClass: PriceClass_All
         ViewerCertificate:
-          CloudFrontDefaultCertificate: 'true'
+          AcmCertificateArn: >-
+            arn:aws:acm:us-east-1:351946280702:certificate/b1a1c13c-2974-4c09-a1ab-f856a0d74896
+          MinimumProtocolVersion: TLSv1
+          SslSupportMethod: sni-only
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 073c4e89-8950-4545-9b34-39c4db361145
   R53Configuration:
     Type: 'AWS::Route53::HostedZone'
     Properties:
-      Name: hack3rlife.website
+      Name: hectorea.shop
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 168ab31b-1e69-4d42-bb77-6e2dc9371b7c
   R53RSConfiguration:
-    Type: 'AWS::Route53::RecordSetGroup'
+    Type: 'AWS::Route53::RecordSet'
     Properties:
       HostedZoneId: !Ref R53Configuration
-      RecordSets:
-        - Name: hack3rlife.com
-          Type: A
-          AliasTarget:
-            HostedZoneId: Z2FDTNDATAQYW2
-            DNSName: !GetAtt 
-              - CloudFrontDistribution
-              - DomainName
+      Name: hectorea.shop
+      Type: A
+      AliasTarget:
+        HostedZoneId: Z2FDTNDATAQYW2
+        DNSName: !GetAtt 
+          - CloudFrontDistribution
+          - DomainName
     Metadata:
       'AWS::CloudFormation::Designer':
         id: f2194dc4-322b-48bd-9811-892e84c434ca
