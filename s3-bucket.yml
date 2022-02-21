@@ -53,7 +53,7 @@ Resources:
     Type: 'AWS::S3::Bucket'
     DeletionPolicy: Delete
     Properties:
-      BucketName: hectorea.shop
+      BucketName: !Ref DomainName
       WebsiteConfiguration:
         IndexDocument: index.html
     Metadata:
@@ -82,9 +82,13 @@ Resources:
     Type: 'AWS::CloudFront::Distribution'
     Properties:
       DistributionConfig:
+        CNAME: !Ref DomainName
         Origins:
           - Id: myS3Bucket
-            DomainName: hectorea.shop.s3-website.us-east-1.amazonaws.com
+            DomainName: !Join
+              - ''
+              - - !Ref DomainName
+                - '.s3-website.us-east-1.amazonaws.com'
             CustomOriginConfig:
               HTTPPort: '80'
               HTTPSPort: '443'
@@ -99,9 +103,8 @@ Resources:
           ViewerProtocolPolicy: redirect-to-https
         PriceClass: PriceClass_All
         ViewerCertificate:
-          AcmCertificateArn: >-
-            arn:aws:acm:us-east-1:351946280702:certificate/b1a1c13c-2974-4c09-a1ab-f856a0d74896
-          MinimumProtocolVersion: TLSv1
+          AcmCertificateArn: !Ref CertificateArn            
+          MinimumProtocolVersion: TLSv1.2_2021
           SslSupportMethod: sni-only
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -109,7 +112,7 @@ Resources:
   R53Configuration:
     Type: 'AWS::Route53::HostedZone'
     Properties:
-      Name: hectorea.shop
+      Name: !Ref DomainName
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 168ab31b-1e69-4d42-bb77-6e2dc9371b7c
@@ -117,7 +120,7 @@ Resources:
     Type: 'AWS::Route53::RecordSet'
     Properties:
       HostedZoneId: !Ref R53Configuration
-      Name: hectorea.shop
+      Name: !Ref DomainName
       Type: A
       AliasTarget:
         HostedZoneId: Z2FDTNDATAQYW2
@@ -127,3 +130,11 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Designer':
         id: f2194dc4-322b-48bd-9811-892e84c434ca
+Parameters:
+  DomainName:
+    Description: The fully qualified domain (e.g. hack3rlife.website)
+    Type: String
+    Default: hack3rlife.website
+  CertificateArn:
+    Description: AcmCertificateArn value (e.g.: arn:aws:acm:us-east-1:351946280702:certificate/b1a1c13c-2974-4c09-a1ab-f856a0d74896)
+    Type: String
