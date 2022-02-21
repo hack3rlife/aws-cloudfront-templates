@@ -82,7 +82,8 @@ Resources:
     Type: 'AWS::CloudFront::Distribution'
     Properties:
       DistributionConfig:
-        CNAME: !Ref DomainName
+        Aliases:
+          - !Ref DomainName
         Origins:
           - Id: myS3Bucket
             DomainName: !Join 
