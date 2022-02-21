@@ -85,10 +85,10 @@ Resources:
         CNAME: !Ref DomainName
         Origins:
           - Id: myS3Bucket
-            DomainName: !Join
+            DomainName: !Join 
               - ''
               - - !Ref DomainName
-                - '.s3-website.us-east-1.amazonaws.com'
+                - .s3-website.us-east-1.amazonaws.com
             CustomOriginConfig:
               HTTPPort: '80'
               HTTPSPort: '443'
@@ -103,7 +103,7 @@ Resources:
           ViewerProtocolPolicy: redirect-to-https
         PriceClass: PriceClass_All
         ViewerCertificate:
-          AcmCertificateArn: !Ref CertificateArn            
+          AcmCertificateArn: !Ref CertificateArn
           MinimumProtocolVersion: TLSv1.2_2021
           SslSupportMethod: sni-only
     Metadata:
@@ -136,5 +136,7 @@ Parameters:
     Type: String
     Default: hack3rlife.website
   CertificateArn:
-    Description: AcmCertificateArn value (e.g.: arn:aws:acm:us-east-1:351946280702:certificate/b1a1c13c-2974-4c09-a1ab-f856a0d74896)
+    Description: >-
+      AcmCertificateArn value (e.g.
+      'arn:aws:acm:us-east-1:351946280702:certificate/b1a1c13c-2974-4c09-a1ab-f856a0d74896')
     Type: String
